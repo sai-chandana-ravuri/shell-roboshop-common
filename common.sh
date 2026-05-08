@@ -12,6 +12,7 @@ B='\e[34m'
 N='\e[0m'
 START_TIME=$(date +%s)
 MONGODB_HOST=mongodb.daws88c.online
+MYSQL_HOST=mysql.daws88c.online
 
 mkdir -p $LOGS_FOLDER
 
@@ -53,6 +54,18 @@ nodejs_setup(){
 
     npm install  &>>$LOGS_FILE
     VALIDATE $? "Installing dependencies"
+}
+
+java_setup(){
+    dnf install maven -y &>>$LOGS_FILE
+    VALIDATE $? "Installing maven"
+
+    cd /app 
+    mvn clean package &>>$LOGS_FILE
+    VALIDATE $? "Installing and Building $app_name"
+
+    mv target/$app_name-1.0.jar $app_name.jar
+    VALIDATE $? "Moving and renaming $app_name"
 }
 
 app_setup(){
